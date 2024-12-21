@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
 
 class LoginSignupPage extends StatefulWidget {
+  
   @override
   _LoginSignupPageState createState() => _LoginSignupPageState();
 }
 
 class _LoginSignupPageState extends State<LoginSignupPage> {
+  bool showSignup = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +37,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               FadeInUp(
                 duration: Duration(milliseconds: 1000),
                 child: Text(
-                  "Login",
+                  showSignup? "Sign Up" : "Log In",
                   style: TextStyle(color: Colors.white, fontSize: 40),
                 ),
               ),
@@ -42,6 +45,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               FadeInUp(
                 duration: Duration(milliseconds: 1300),
                 child: Text(
+                  showSignup? "Create an Account":
                   "Welcome Back",
                   style: TextStyle(color: Colors.white, fontSize: 18),
                 ),
@@ -78,7 +82,56 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                           )
                         ]
                       ),
-                      child: Column(
+                      child: showSignup ? Column(
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: Colors.grey.shade200)
+                              )
+                            ),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "Email",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: InputBorder.none
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: Colors.grey.shade200)
+                              )
+                            ),
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "Phone Number",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: InputBorder.none
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border(
+                                bottom: BorderSide(color: Colors.grey.shade200)
+                              )
+                            ),
+                            child: TextField(
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                hintText: "Password",
+                                hintStyle: TextStyle(color: Colors.grey),
+                                border: InputBorder.none
+                              ),
+                            ),
+                          ),
+                        ],
+                      ) : Column(
                         children: <Widget>[
                           Container(
                             padding: EdgeInsets.all(10),
@@ -115,7 +168,41 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 30),
+                  
+                  showSignup ? 
+                  Row(
+                    children: <Widget>[
+                      Text(
+                      "Already have an account?",
+                      style: TextStyle(color: Colors.grey),
+                    ), GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showSignup = !showSignup;
+                        });
+                      },
+                      child: Text(" tap here to Log In", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) // Theme color with bold text
+                    )
+                    ],
+                  ) :
+                  Row(
+                    children: <Widget>[
+                      Text(
+                      "Don't have an account?",
+                      style: TextStyle(color: Colors.grey),
+                    ), GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showSignup = !showSignup;
+                        });
+                      },
+                      child: Text(" tap here to Sign Up", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),) // Theme color with bold text
+                    )
+                    ],
+                  ),
+
+                  SizedBox(height: 30),
                   FadeInUp(
                     duration: Duration(milliseconds: 1500),
                     child: Text(
@@ -123,7 +210,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                       style: TextStyle(color: Colors.grey),
                     ),
                   ),
-                  SizedBox(height: 40),
+                  SizedBox(height: 30),
                   FadeInUp(
                     duration: Duration(milliseconds: 1600),
                     child: MaterialButton(
@@ -135,7 +222,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                       ),
                       child: Center(
                         child: Text(
-                          "Login",
+                          showSignup? "Sign Up" : "Log In",
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold
@@ -144,7 +231,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50),
+                  SizedBox(height: 30),
                   FadeInUp(
                     duration: Duration(milliseconds: 1700),
                     child: Text(
