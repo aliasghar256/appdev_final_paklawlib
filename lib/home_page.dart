@@ -15,6 +15,24 @@ class _HomePageState extends State<HomePage>{
         title: Text('Home Page'),
         
       ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Home"),
+              onTap: () {
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.chat),
+              title: Text("ChatGPT"),
+              onTap: () {
+              },
+            ),
+          ],
+        )
+      ),
       body: JudgmentSearchBar(),
     );
   }
