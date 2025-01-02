@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'bloc/judgment_bloc/judgment_bloc.dart';
+import './bloc/judgment_bloc/judgment_event.dart';
+import 'bloc/judgment_bloc/judgment_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HomePage extends StatefulWidget{
 
@@ -7,6 +11,11 @@ class HomePage extends StatefulWidget{
 }
 
 class _HomePageState extends State<HomePage>{
+
+  Future<void> _fetchJudgmentResults() async {
+    // Add your search logic here
+    
+  }
 
   @override
   Widget build(BuildContext context){
@@ -18,25 +27,64 @@ class _HomePageState extends State<HomePage>{
       drawer: Drawer(
         child: ListView(
           children: [
-            ListTile(
-              leading: Icon(Icons.home),
-              title: Text("Home"),
-              onTap: () {
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.chat),
-              title: Text("ChatGPT"),
-              onTap: () {
-              },
-            ),
+        ListTile(
+          leading: Icon(Icons.home),
+          title: Text("Home"),
+          onTap: () {
+          },
+        ),
+        ListTile(
+          leading: Icon(Icons.chat),
+          title: Text("ChatGPT"),
+          onTap: () {
+          },
+        ),
           ],
         )
       ),
-      body: JudgmentSearchBar(),
-    );
-  }
-}
+      body: Column(
+        children: [
+          JudgmentSearchBar(),
+          Expanded(
+            child: BlocBuilder<JudgmentBloc, JudgmentState>(
+              builder: (context, state) {
+                if (state is JudgmentInitial) {
+                  return Center(child: Text('Please enter search criteria'));
+                } 
+                else if (state is JudgmentLoading) {
+                  return Center(child: CircularProgressIndicator());
+                } 
+                else if (state is JudgmentsLoaded) {
+                  final judgments = state.judgments; 
+                  // or if your state returns a List<Map>, adjust accordingly
+
+                  return ListView.builder(
+                    itemCount: judgments.length,
+                    itemBuilder: (context, index) {
+                      final item = judgments[index];
+                      return ListTile(
+                        title: Text(item.snippet ?? 'No snippet'),
+                        subtitle: Text('CaseNo: ${item.caseNo}'),
+                      );
+                    },
+                  );
+                } 
+                else if (state is JudgmentError) {
+                  return Center(child: Text('Error: ${state.error}'));
+                } 
+                else {
+                  // Fallback if we get an unrecognized state
+                  return Center(child: Text('Something else happened.'));
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+        );
+      }
+    }
+
 
 class JudgmentSearchBar extends StatefulWidget {
   @override
@@ -44,11 +92,13 @@ class JudgmentSearchBar extends StatefulWidget {
 }
 
 class _JudgmentSearchBarState extends State<JudgmentSearchBar> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
+    return Container(
+      color: Colors.white,
+      child: Padding(
         padding: const EdgeInsets.all(12.0), // Reduced padding for compact design
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,6 +133,7 @@ class _JudgmentSearchBarState extends State<JudgmentSearchBar> {
                           // Search Query Input
                           Expanded(
                             child: TextField(
+                              controller: _searchController,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(Icons.search, size: 20), // Reduced icon size
                                 hintText: 'Enter Your Query',
@@ -97,8 +148,18 @@ class _JudgmentSearchBarState extends State<JudgmentSearchBar> {
                             width: constraints.maxWidth * 0.18, // Reduced button width
                             child: ElevatedButton(
                               onPressed: () {
-                                // Add your search logic
-                              },
+                              final keyword = _searchController.text.trim();
+                              if (keyword.isNotEmpty) {
+                                // Trigger the bloc event
+                                context.read<JudgmentBloc>().add(
+                                  JudgmentKeywordSearchEvent(
+                                    keyword: keyword,
+                                    page: 1,   // or read from your filters
+                                    limit: 10, // or read from your filters
+                                  ),
+                                );
+                              }
+                            },
                               style: ElevatedButton.styleFrom(
                                 padding: EdgeInsets.symmetric(vertical: 10), // Compact button
                                 shape: RoundedRectangleBorder(
