@@ -21,6 +21,16 @@ class JudgmentBloc extends Bloc<JudgmentEvent, JudgmentState> {
         emit(JudgmentError(error: e.toString()));
       }
     });
+
+    on<JudgmentViewEvent>((event, emit) async {
+      emit(JudgmentLoading());
+      try {
+        final Judgment judgment = await manager.fetchJudgmentById(event.id);
+        emit(JudgmentViewLoaded(judgment: judgment));
+      } catch (e) {
+        emit(JudgmentError(error: e.toString()));
+      }
+    });
   }
 }
 

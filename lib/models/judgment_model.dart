@@ -7,6 +7,7 @@ class Judgment {
   final String caseNo;
   final String snippet;
   final List<int> indexes;
+  final String JudgmentText;
 
   Judgment({
     required this.judgmentID,
@@ -17,6 +18,7 @@ class Judgment {
     required this.caseNo,
     required this.snippet,
     required this.indexes,
+    required this.JudgmentText,
   });
 
   // A factory constructor to create a Judgment from JSON
@@ -30,6 +32,7 @@ class Judgment {
       caseNo: json['CaseNo'] ?? '',
       snippet: json['snippet'] ?? '',
       indexes: List<int>.from(json['indexes'] ?? []),
+      JudgmentText: json['JudgmentText'] ?? '',
     );
   }
 }

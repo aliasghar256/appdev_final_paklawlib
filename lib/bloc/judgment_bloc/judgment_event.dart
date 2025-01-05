@@ -14,6 +14,12 @@ class JudgmentKeywordSearchEvent extends JudgmentEvent {
   });
 }
 
+class JudgmentViewEvent extends JudgmentEvent {
+  final String id;
+
+  JudgmentViewEvent({required this.id});
+}
+
 
 class TransactionsAddEvent extends JudgmentEvent {
   final String transaction;

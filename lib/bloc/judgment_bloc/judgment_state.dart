@@ -13,6 +13,12 @@ class JudgmentsLoaded extends JudgmentState {
   JudgmentsLoaded({required this.judgments});
 }
 
+class JudgmentViewLoaded extends JudgmentState {
+  final Judgment judgment;
+
+  JudgmentViewLoaded({required this.judgment});
+}
+
 class JudgmentError extends JudgmentState {
   final String error;
 
