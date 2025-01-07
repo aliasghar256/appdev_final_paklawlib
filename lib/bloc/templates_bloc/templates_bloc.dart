@@ -18,6 +18,16 @@ class TemplatesBloc extends Bloc<TemplatesEvent, TemplatesState> {
         emit(TemplatesError(error: e.toString()));
       }
     });
+
+    on<DownloadTemplateEvent>((event, emit) async {
+      try {
+        await manager.downloadTemplateById(event.templateId, event.savePath);
+        // Perform the download silently without emitting any new states
+      } catch (e) {
+        // Optionally log or handle the error silently
+        print('Download error: ${e.toString()}');
+      }
+    });
     add(TemplatesFettchAllEvent());
   }
   

@@ -17,3 +17,19 @@ class TemplatesError extends TemplatesState {
 
   TemplatesError({required this.error});
 }
+
+class TemplateDownloadInProgress extends TemplatesState {}
+
+class TemplateDownloaded extends TemplatesState {
+  final String savePath;
+
+  TemplateDownloaded({required this.savePath});
+
+}
+
+class TemplateDownloadError extends TemplatesState {
+  final String error;
+
+  TemplateDownloadError({required this.error});
+
+}

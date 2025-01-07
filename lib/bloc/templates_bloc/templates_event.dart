@@ -6,10 +6,11 @@ abstract class TemplatesEvent {
 /// Load all templates when page is opened
 class TemplatesFettchAllEvent extends TemplatesEvent {}
 
-class DownloadTemplate extends TemplatesEvent {
+class DownloadTemplateEvent extends TemplatesEvent {
   final String templateId;
+  final String savePath;
 
-  DownloadTemplate(this.templateId);
+  DownloadTemplateEvent({required this.templateId, required this.savePath});
 }
 
 /// Search templates based on a query string

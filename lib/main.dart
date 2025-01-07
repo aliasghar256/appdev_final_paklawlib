@@ -8,6 +8,9 @@ import 'bloc/notifications_bloc/notifications_bloc.dart';
 import 'view_judgment_page.dart';
 import 'bloc/templates_bloc/templates_bloc.dart';
 import './managers/templates_manager.dart';
+import 'bloc/auth_bloc/auth_bloc.dart';
+import './managers/auth_manger.dart';
+import './login_signup_page.dart';
 import 'templates_screen.dart';
 import './managers/notifications_manager.dart';
 void main() {
@@ -23,9 +26,15 @@ class MainApp extends StatelessWidget {
         BlocProvider(create: (context) => JudgmentBloc(manager: JudgmentManager()),),
         BlocProvider(create: (context) => NotificationsBloc(manager: NotificationsManager()),),
         BlocProvider(create: (context) => TemplatesBloc(manager: TemplatesManager()),),
+        BlocProvider(create: (context) => AuthBloc(auth: AuthManager()),),
       ], 
     child: MaterialApp(
-      home: TemplatesScreen(),)
+      debugShowCheckedModeBanner: false,
+      initialRoute: '/login',
+      routes: {
+        '/login': (context) => LoginSignupPage(),
+        '/home': (context) => HomePage(),
+      },)
     );
   }
 }

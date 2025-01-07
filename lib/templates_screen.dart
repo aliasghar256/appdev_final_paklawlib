@@ -4,6 +4,21 @@ import '../models/templates_model.dart';
 import 'bloc/templates_bloc/templates_state.dart';
 import 'bloc/templates_bloc/templates_event.dart';
 import 'bloc/templates_bloc/templates_bloc.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+
+Future<String> getDefaultDownloadPath(String filename) async {
+  if (Platform.isAndroid || Platform.isIOS) {
+    final directory = await getApplicationDocumentsDirectory();
+    return '${directory.path}/$filename';
+  } else if (Platform.isWindows) {
+    return 'C:\\Users\\${Platform.environment['USERNAME']}\\Downloads\\$filename';
+  } else if (Platform.isMacOS || Platform.isLinux) {
+    return '/Users/${Platform.environment['USER']}/Downloads/$filename';
+  } else {
+    throw UnsupportedError('Unsupported platform');
+  }
+}
 
 class TemplatesScreen extends StatelessWidget {
   @override
@@ -90,14 +105,34 @@ class TemplatesScreen extends StatelessWidget {
           spacing: 8,
           children: [
             ElevatedButton(
-              onPressed: () {
-                // Implement download functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Download functionality here')),
-                );
+              onPressed: () async {
+                final templateId = template.id;
+                final filename = template.filename;
+
+                try {
+                  // Get the dynamic save path
+                  final savePath = await getDefaultDownloadPath(filename);
+
+                  // Trigger the download event
+                  context.read<TemplatesBloc>().add(DownloadTemplateEvent(
+                    templateId: templateId,
+                    savePath: savePath,
+                  ));
+
+                  // Provide feedback to the user
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Downloading $filename...')),
+                  );
+                } catch (e) {
+                  // Handle path errors or other issues
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: ${e.toString()}')),
+                  );
+                }
               },
               child: Text('Download'),
             ),
+
             ElevatedButton(
               onPressed: () {
                 // Implement edit functionality
