@@ -111,43 +111,104 @@ class HomeContent extends StatelessWidget {
                   itemCount: judgments.length,
                   itemBuilder: (context, index) {
                     final item = judgments[index];
-                    return ListTile(
-                      title: Text(item.snippet ?? 'No snippet'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('CaseNo: ${item.caseNo}'),
-                          SizedBox(height: 8),
-                          ElevatedButton(
-                            onPressed: () async {
-                              try {
-                                context.read<JudgmentBloc>().add(
-                                      JudgmentAddFavoriteEvent(
-                                        JudgmentID: item.judgmentID.toString(),
+                    return Card(
+                      color: Colors.white,
+                      margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      elevation: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Judgment Title
+                            Text(
+                              '${item.party1} vs ${item.party2}',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              item.snippet ?? 'No snippet available',
+                              style: TextStyle(
+                                fontSize: 16, // Smaller font size
+                                fontWeight: FontWeight.normal,
+                                color: Colors.black,
+                              ),
+                              maxLines: 4, // Limit to 2 lines
+                              overflow: TextOverflow.ellipsis, // Add ellipses (...) for overflow
+                            ),
+                            // Case Details (Party1 vs Party2, CaseNo, and Year)
+                            
+                            SizedBox(height: 4),
+                            Text(
+                              'Case No: ${item.caseNo}',
+                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            ),
+                            Text(
+                              'Year: ${item.caseYear}',
+                              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                            ),
+                            SizedBox(height: 12),
+
+                            // Action Buttons (Favorite and View Judgment)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                ElevatedButton.icon(
+                                  onPressed: () async {
+                                    try {
+                                      context.read<JudgmentBloc>().add(
+                                            JudgmentAddFavoriteEvent(
+                                              JudgmentID: item.judgmentID.toString(),
+                                            ),
+                                          );
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Judgment added to favorites!'),
+                                          behavior: SnackBarBehavior.floating,
+                                        ),
+                                      );
+                                    } catch (e) {
+                                      print('Error: $e');
+                                    }
+                                  },
+                                  icon: Icon(Icons.favorite),
+                                  label: Text("Favorite"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.red[400],
+                                    foregroundColor: Colors.white,
+                                  ),
+                                ),
+                                ElevatedButton.icon(
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ViewJudgmentPage(judgmentId: item.judgmentID.toString()),
+                                        settings: RouteSettings(arguments: 'home'), // Passing 'home' as the previous page
                                       ),
                                     );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Judgment added to favorites!')),
-                                );
-                              } catch (e) {
-                                print('Error: $e');
-                              }
-                            },
-                            child: Text("Favorite"),
-                          ),
-                          ElevatedButton(onPressed: (){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ViewJudgmentPage(judgmentId: item.judgmentID.toString()),
-                              ),
-                            );
-                          }, child: Text("View Judgment"))
-                        ],
+                                  },
+                                  icon: Icon(Icons.visibility),
+                                  label: Text("View Judgment"),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Color(0xFF002855),
+                                    foregroundColor: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     );
+
                   },
                 );
               } else if (state is JudgmentError) {

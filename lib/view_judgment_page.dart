@@ -9,6 +9,7 @@ class ViewJudgmentPage extends StatelessWidget {
   final String judgmentId;
 
   const ViewJudgmentPage({Key? key, required this.judgmentId}) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +22,10 @@ class ViewJudgmentPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            context.read<JudgmentBloc>().add(ReturnToHomePageEvent());
-            // Navigate back to the previous screen
-            Navigator.pop(context);
+            // Trigger the event to load favorites when the screen is first built
+              context.read<JudgmentBloc>().add(ReturnToHomePageEvent());
+            
+            Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
           },
         ),
       ),

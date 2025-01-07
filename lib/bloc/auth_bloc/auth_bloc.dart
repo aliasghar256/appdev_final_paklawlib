@@ -17,7 +17,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (result['success'] == true) {
           // Emit success state with user info
           final user = result['user'] as User;
+          final result2 = await auth.login(email: event.email, password: event.password);
+          if (result['success'] == true) {
+          // Emit success state with user info
+          final user = result['user'] as User;
+
           emit(AuthLoggedIn(user: user));
+        }
+          else {
+            // Emit failure state with message
+            emit(AuthError(message: result['message']));
+          }
         } else {
           // Emit failure state with message
           emit(AuthError(message: result['message']));
@@ -37,6 +47,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (result['success'] == true) {
           // Emit success state with user info
           final user = result['user'] as User;
+
           emit(AuthLoggedIn(user: user));
         } else {
           // Emit failure state with message

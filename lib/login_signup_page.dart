@@ -72,9 +72,9 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 colors: [
-                  Color(0xFF4BBEA1),
-                  Color(0xFF3BA58B),
-                  Color(0xFF266958)
+                  Color(0xFF0069E0),
+                  Color(0xFF00438F),
+                  Color(0xFF002855)
                 ],
               ),
             ),
@@ -128,7 +128,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                                 borderRadius: BorderRadius.circular(10),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Color(0x804BBEA1),
+                                    color: Color(0xFF002855),
                                     blurRadius: 20,
                                     offset: Offset(0, 10),
                                   ),
@@ -181,7 +181,7 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                               child: MaterialButton(
                                 onPressed: () => _handleAuthAction(context),
                                 height: 50,
-                                color: Color(0xFF266958),
+                                color: Color(0xFF002855),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50),
                                 ),

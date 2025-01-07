@@ -29,42 +29,85 @@ class FavoritesScreen extends StatelessWidget {
               final judgment = favorites[index];
 
               return Card(
-                margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                child: ListTile(
-                  title: Text(
-                    judgment.party1,
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                color: Colors.white,
+  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(12), // Rounded corners
+  ),
+  elevation: 4, // Adds shadow to the card
+  child: Padding(
+    padding: const EdgeInsets.all(16.0), // Inner padding for a cleaner layout
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Title (Party 1)
+        Text(
+          judgment.party1,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(height: 8),
+
+        // Case Details
+        Text(
+          'Case No: ${judgment.caseNo}',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+          ),
+        ),
+        Text(
+          'Year: ${judgment.caseYear}',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+          ),
+        ),
+        SizedBox(height: 16),
+
+        // Action Buttons (View Judgment and Delete)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ViewJudgmentPage(
+                      judgmentId: judgment.judgmentID.toString(),
+                    ),
                   ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 8),
-                      Text('Case No: ${judgment.caseNo}'),
-                      Text('Year: ${judgment.caseYear}'),
-                      ElevatedButton(onPressed: (){
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ViewJudgmentPage(judgmentId: judgment.judgmentID.toString()),
-                              ),
-                            );
-                          }, child: Text("View Judgment"))
-                    ],
-                  ),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      context.read<JudgmentBloc>().add(
-                        JudgmentDeleteFavoriteEvent(JudgmentID: judgment.judgmentID.toString()),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Deleting favorite...')),
-                      );
-                     
-                    },
-                  ),
-                ),
-              );
+                );
+              },
+              icon: Icon(Icons.visibility),
+              label: Text("View Judgment"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF002855),
+                foregroundColor: Colors.white,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.delete, color: Colors.red),
+              onPressed: () {
+                context.read<JudgmentBloc>().add(
+                  JudgmentDeleteFavoriteEvent(
+                      JudgmentID: judgment.judgmentID.toString()),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Deleting favorite...')),
+                );
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+);
             },
           );
         } else if (state is JudgmentFavoritesError) {
