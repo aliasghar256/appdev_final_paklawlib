@@ -116,6 +116,44 @@ Future<Map<String, dynamic>> addFavorite({
     throw Exception('Error fetching favorites: $error');
   }
 }
+Future<Map<String, dynamic>> deleteFavorite({
+  required String judgmentId,
+}) async {
+  final url = Uri.parse('http://10.0.2.2:3001/favorites/delete');
+
+  // Create Authorization headers with the token
+  final headers = await HeaderUtil.createAuthHeaders();
+  headers.addAll({
+    'JudgmentID': judgmentId, // Add the JudgmentID in the headers
+  });
+
+  try {
+    final response = await http.delete(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      return {
+        'success': true,
+        'message': json.decode(response.body)['Message'],
+      };
+    } else if (response.statusCode == 404) {
+      return {
+        'success': false,
+        'message': json.decode(response.body)['Message'] ?? 'Favorite not found',
+      };
+    } else {
+      return {
+        'success': false,
+        'message': 'Failed to delete favorite: ${response.body}',
+      };
+    }
+  } catch (error) {
+    return {
+      'success': false,
+      'message': 'Error: $error',
+    };
+  }
+}
+
 
 
 }

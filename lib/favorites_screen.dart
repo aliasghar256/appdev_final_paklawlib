@@ -45,12 +45,13 @@ class FavoritesScreen extends StatelessWidget {
                   trailing: IconButton(
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () {
-                      // Handle removing the favorite
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(
-                                'Remove functionality not implemented yet!')),
+                      context.read<JudgmentBloc>().add(
+                        JudgmentDeleteFavoriteEvent(JudgmentID: judgment.judgmentID.toString()),
                       );
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Deleting favorite...')),
+                      );
+                     
                     },
                   ),
                 ),

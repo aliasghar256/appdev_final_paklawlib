@@ -27,3 +27,9 @@ class JudgmentAddFavoriteEvent extends JudgmentEvent {
 }
 
 class JudgmentFetchAllFavoritesEvent extends JudgmentEvent {}
+
+class JudgmentDeleteFavoriteEvent extends JudgmentEvent {
+  final String JudgmentID;
+
+  JudgmentDeleteFavoriteEvent({required this.JudgmentID});
+}

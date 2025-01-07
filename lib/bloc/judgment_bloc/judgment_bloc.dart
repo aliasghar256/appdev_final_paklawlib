@@ -56,6 +56,24 @@ class JudgmentBloc extends Bloc<JudgmentEvent, JudgmentState> {
     emit(JudgmentFavoritesError(error: error.toString()));
   }
 });
+  on<JudgmentDeleteFavoriteEvent>((event, emit) async {
+  try {
+    // Call the manager's deleteFavorite function
+    final result = await manager.deleteFavorite(judgmentId: event.JudgmentID);
+    
+    if (result['success'] == true) {
+      // Trigger a refresh of the favorites list by dispatching JudgmentViewFavoritesEvent
+      add(JudgmentFetchAllFavoritesEvent());
+    } else {
+      // Emit an error state if the deletion fails
+      emit(JudgmentError(error: result['message']));
+    }
+  } catch (e) {
+    // Handle any errors during the API call
+    emit(JudgmentError(error: e.toString()));
+  }
+});
+
   }
 }
 
