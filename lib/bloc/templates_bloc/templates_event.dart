@@ -4,9 +4,14 @@ abstract class TemplatesEvent {
 }
 
 /// Load all templates when page is opened
-class TemplatesLoading extends TemplatesEvent {}
+class TemplatesFettchAllEvent extends TemplatesEvent {}
 
-class FetchTemplates extends TemplatesEvent {}
+class DownloadTemplate extends TemplatesEvent {
+  final String templateId;
+
+  DownloadTemplate(this.templateId);
+}
+
 /// Search templates based on a query string
 // class SearchTemplates extends TemplatesEvent {
 //   final String query;
