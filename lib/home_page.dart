@@ -3,6 +3,7 @@ import 'bloc/judgment_bloc/judgment_bloc.dart';
 import './bloc/judgment_bloc/judgment_event.dart';
 import 'bloc/judgment_bloc/judgment_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'notifications_screen.dart';
 
 class HomePage extends StatefulWidget{
 
@@ -12,17 +13,19 @@ class HomePage extends StatefulWidget{
 
 class _HomePageState extends State<HomePage>{
 
-  Future<void> _fetchJudgmentResults() async {
-    // Add your search logic here
-    
-  }
-
   @override
   Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
-        
+        actions: [
+          IconButton(onPressed: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+              );
+          }, icon: const Icon(Icons.notifications))
+        ],
       ),
       drawer: Drawer(
         child: ListView(

@@ -4,8 +4,9 @@ import 'package:finalproject/home_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/judgment_bloc/judgment_bloc.dart';
 import './managers/judgment_manager.dart';
+import 'bloc/notifications_bloc/notifications_bloc.dart';
 import 'view_judgment_page.dart';
-
+import './managers/notifications_manager.dart';
 void main() {
   runApp(const MainApp());
 }
@@ -15,11 +16,12 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: MultiBlocProvider(providers: [
+    return MultiBlocProvider(providers: [
         BlocProvider(create: (context) => JudgmentBloc(manager: JudgmentManager()),),
+        BlocProvider(create: (context) => NotificationsBloc(manager: NotificationsManager()),),
       ], 
-      child: ViewJudgmentPage(judgmentId:'21'),)
+    child: MaterialApp(
+      home: HomePage(),)
     );
   }
 }
