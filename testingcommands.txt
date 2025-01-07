@@ -1,0 +1,9 @@
+flutter test test/bloc/notifications_bloc/notifications_bloc_test.dart
+flutter test test/bloc/judgment_bloc/judgment_bloc_test.dart
+flutter test test/bloc/auth_bloc/auth_bloc_test.dart
+
+flutter test test/bloc/templates_bloc/templates_bloc_test.dart
+
+
+flutter test --update-goldens test/notifications_screen_golden_test.dart
+flutter test test/notifications_screen_golden_test.dart
