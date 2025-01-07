@@ -91,5 +91,31 @@ Future<Map<String, dynamic>> addFavorite({
       };
     }
   }
+  Future<List<Judgment>> viewFavorites() async {
+  final url = Uri.parse('http://10.0.2.2:3001/favorites/view');
+  final headers = await HeaderUtil.createAuthHeaders();
+
+  try {
+    final response = await http.get(url, headers: headers);
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final favorites = data['favorites'] as List<dynamic>;
+
+      // Map each `judgment_ID` to a `Judgment` object
+      return favorites.map((item) {
+        final judgmentData = item['judgment_ID']; // Extract `judgment_ID`
+        return Judgment.fromJson(judgmentData); // Map it to `Judgment`
+      }).toList();
+    } else if (response.statusCode == 404) {
+      throw Exception('No favorites found.');
+    } else {
+      throw Exception('Failed to fetch favorites: ${response.body}');
+    }
+  } catch (error) {
+    throw Exception('Error fetching favorites: $error');
+  }
+}
+
 
 }

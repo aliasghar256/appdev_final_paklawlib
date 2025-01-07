@@ -46,6 +46,16 @@ class JudgmentBloc extends Bloc<JudgmentEvent, JudgmentState> {
         emit(JudgmentError(error: e.toString()));
       }
     });
+
+    on<JudgmentFetchAllFavoritesEvent>((event, emit) async {
+  emit(JudgmentFavoritesLoading());
+  try {
+    final favorites = await manager.viewFavorites();
+    emit(JudgmentFavoritesLoaded(judgments: favorites));
+  } catch (error) {
+    emit(JudgmentFavoritesError(error: error.toString()));
+  }
+});
   }
 }
 

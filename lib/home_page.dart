@@ -1,3 +1,5 @@
+import 'package:finalproject/favorites_screen.dart';
+import 'package:finalproject/templates_screen.dart';
 import 'package:flutter/material.dart';
 import 'bloc/judgment_bloc/judgment_bloc.dart';
 import './bloc/judgment_bloc/judgment_event.dart';
@@ -5,110 +7,149 @@ import 'bloc/judgment_bloc/judgment_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'notifications_screen.dart';
 
-class HomePage extends StatefulWidget{
-
+class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>{
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0; // Tracks the selected tab
+
+  // Pages for each tab
+  final List<Widget> _pages = [
+    HomeContent(), // Main home content
+    FavoritesScreen(), // Favorites screen
+    TemplatesScreen(), // Templates screen
+  ];
+
+  // Handle tab selection
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Home Page'),
         actions: [
-          IconButton(onPressed: (){
-            Navigator.push(
+          IconButton(
+            onPressed: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const NotificationsScreen()),
               );
-          }, icon: const Icon(Icons.notifications))
+            },
+            icon: const Icon(Icons.notifications),
+          )
         ],
       ),
       drawer: Drawer(
         child: ListView(
           children: [
-        ListTile(
-          leading: Icon(Icons.home),
-          title: Text("Home"),
-          onTap: () {
-          },
-        ),
-        ListTile(
-          leading: Icon(Icons.chat),
-          title: Text("ChatGPT"),
-          onTap: () {
-          },
-        ),
-          ],
-        )
-      ),
-      body: Column(
-        children: [
-          JudgmentSearchBar(),
-          Expanded(
-            child: BlocBuilder<JudgmentBloc, JudgmentState>(
-              builder: (context, state) {
-                if (state is JudgmentInitial) {
-                  return Center(child: Text('Please enter search criteria'));
-                } 
-                else if (state is JudgmentLoading) {
-                  return Center(child: CircularProgressIndicator());
-                } 
-                else if (state is JudgmentsLoaded) {
-                  final judgments = state.judgments; 
-                  // or if your state returns a List<Map>, adjust accordingly
-
-                  return ListView.builder(
-                    itemCount: judgments.length,
-                    itemBuilder: (context, index) {
-                      final item = judgments[index];
-                      return ListTile(
-                        title: Text(item.snippet ?? 'No snippet'),
-                        subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start, // Align content to the start
-                            children: [
-                              Text('CaseNo: ${item.caseNo}'), // Case number at the top
-                              SizedBox(height: 8), // Add some spacing between the text and the button
-                              ElevatedButton(
-                                onPressed: () async {
-                                  try {
-                                    context.read<JudgmentBloc>().add(
-                                      JudgmentAddFavoriteEvent(JudgmentID: item.judgmentID.toString()),
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(content: Text('Judgment added to favorites!')),
-                                  );
-                                  } catch (e) {
-                                    print('Error: $e');
-                                  }
-                                  
-                                },
-                                child: Text("Favorite"), // Button below the case number
-                              ),
-                            ],
-                          ),
-                      );
-                    },
-                  );
-                } 
-                else if (state is JudgmentError) {
-                  return Center(child: Text('Error: ${state.error}'));
-                } 
-                else {
-                  // Fallback if we get an unrecognized state
-                  return Center(child: Text('Something else happened.'));
-                }
-              },
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text("Home"),
+              onTap: () {},
             ),
+            ListTile(
+              leading: Icon(Icons.chat),
+              title: Text("ChatGPT"),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+      body: _pages[_selectedIndex], // Display the selected page
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorites',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.description),
+            label: 'Templates',
           ),
         ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        onTap: _onItemTapped, // Handle tab changes
       ),
-        );
-      }
-    }
+    );
+  }
+}
+
+// Placeholder for Home content
+class HomeContent extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        JudgmentSearchBar(),
+        Expanded(
+          child: BlocBuilder<JudgmentBloc, JudgmentState>(
+            builder: (context, state) {
+              if (state is JudgmentInitial) {
+                return Center(child: Text('Please enter search criteria'));
+              } else if (state is JudgmentLoading) {
+                return Center(child: CircularProgressIndicator());
+              } else if (state is JudgmentsLoaded) {
+                final judgments = state.judgments;
+
+                return ListView.builder(
+                  itemCount: judgments.length,
+                  itemBuilder: (context, index) {
+                    final item = judgments[index];
+                    return ListTile(
+                      title: Text(item.snippet ?? 'No snippet'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('CaseNo: ${item.caseNo}'),
+                          SizedBox(height: 8),
+                          ElevatedButton(
+                            onPressed: () async {
+                              try {
+                                context.read<JudgmentBloc>().add(
+                                      JudgmentAddFavoriteEvent(
+                                        JudgmentID: item.judgmentID.toString(),
+                                      ),
+                                    );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Judgment added to favorites!')),
+                                );
+                              } catch (e) {
+                                print('Error: $e');
+                              }
+                            },
+                            child: Text("Favorite"),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              } else if (state is JudgmentError) {
+                return Center(child: Text('Error: ${state.error}'));
+              } else {
+                return Center(child: Text('Something else happened.'));
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 
 class JudgmentSearchBar extends StatefulWidget {

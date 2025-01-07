@@ -25,3 +25,5 @@ class JudgmentAddFavoriteEvent extends JudgmentEvent {
 
   JudgmentAddFavoriteEvent({required this.JudgmentID});
 }
+
+class JudgmentFetchAllFavoritesEvent extends JudgmentEvent {}

@@ -24,3 +24,17 @@ class JudgmentError extends JudgmentState {
 
   JudgmentError({required this.error});
 }
+
+class JudgmentFavoritesLoading extends JudgmentState {}
+
+class JudgmentFavoritesLoaded extends JudgmentState {
+  final List<Judgment> judgments;
+
+  JudgmentFavoritesLoaded({required this.judgments});
+}
+
+class JudgmentFavoritesError extends JudgmentState {
+  final String error;
+
+  JudgmentFavoritesError({required this.error});
+}
