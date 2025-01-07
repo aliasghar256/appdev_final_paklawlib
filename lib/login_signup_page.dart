@@ -46,38 +46,35 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthLoggedIn) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Welcome, ${state.user.email}!')),
-            );
-            Navigator.pushReplacementNamed(context, '/home');  
-
-          // Navigate to Home Page
+Widget build(BuildContext context) {
+  return Scaffold(
+    body: BlocConsumer<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthLoggedIn) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Welcome, ${state.user.email}!')),
+          );
           Navigator.pushReplacementNamed(context, '/home');
-            // Navigate to the next screen or dashboard
-          } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
-          }
-        },
-        builder: (context, state) {
-          return Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                colors: [
-                  Color(0xFF0069E0),
-                  Color(0xFF00438F),
-                  Color(0xFF002855)
-                ],
-              ),
+        } else if (state is AuthError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message)),
+          );
+        }
+      },
+      builder: (context, state) {
+        return Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              colors: [
+                Color(0xFF0069E0),
+                Color(0xFF00438F),
+                Color(0xFF002855),
+              ],
             ),
+          ),
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -106,130 +103,129 @@ class _LoginSignupPageState extends State<LoginSignupPage> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(60),
-                        topRight: Radius.circular(60),
-                      ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(60),
+                      topRight: Radius.circular(60),
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.all(30),
-                      child: Column(
-                        children: <Widget>[
-                          SizedBox(height: 60),
-                          FadeInUp(
-                            duration: Duration(milliseconds: 1400),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xFF002855),
-                                    blurRadius: 20,
-                                    offset: Offset(0, 10),
-                                  ),
-                                ],
-                              ),
-                              child: Column(
-                                children: <Widget>[
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(color: Colors.grey.shade200),
-                                      ),
-                                    ),
-                                    child: TextField(
-                                      controller: _emailController,
-                                      decoration: InputDecoration(
-                                        hintText: "Email",
-                                        hintStyle: TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
-                                      ),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.all(30),
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 60),
+                        FadeInUp(
+                          duration: Duration(milliseconds: 1400),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Color(0xFF002855),
+                                  blurRadius: 20,
+                                  offset: Offset(0, 10),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(color: Colors.grey.shade200),
                                     ),
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.all(10),
-                                    decoration: BoxDecoration(
-                                      border: Border(
-                                        bottom: BorderSide(color: Colors.grey.shade200),
-                                      ),
-                                    ),
-                                    child: TextField(
-                                      controller: _passwordController,
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                        hintText: "Password",
-                                        hintStyle: TextStyle(color: Colors.grey),
-                                        border: InputBorder.none,
-                                      ),
+                                  child: TextField(
+                                    controller: _emailController,
+                                    decoration: InputDecoration(
+                                      hintText: "Email",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none,
                                     ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(color: Colors.grey.shade200),
+                                    ),
+                                  ),
+                                  child: TextField(
+                                    controller: _passwordController,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(color: Colors.grey),
+                                      border: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 30),
-                          if (state is AuthLoading) CircularProgressIndicator(),
-                          if (state is! AuthLoading)
-                            FadeInUp(
-                              duration: Duration(milliseconds: 1600),
-                              child: MaterialButton(
-                                onPressed: () => _handleAuthAction(context),
-                                height: 50,
-                                color: Color(0xFF002855),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    showSignup ? "Sign Up" : "Log In",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
+                        ),
+                        SizedBox(height: 30),
+                        if (state is AuthLoading) CircularProgressIndicator(),
+                        if (state is! AuthLoading)
+                          FadeInUp(
+                            duration: Duration(milliseconds: 1600),
+                            child: MaterialButton(
+                              onPressed: () => _handleAuthAction(context),
+                              height: 50,
+                              color: Color(0xFF002855),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(50),
                               ),
-                            ),
-                          SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                showSignup ? "Already have an account?" : "Don't have an account?",
-                                style: TextStyle(color: Colors.grey),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    showSignup = !showSignup;
-                                  });
-                                },
+                              child: Center(
                                 child: Text(
-                                  showSignup ? " Log In" : " Sign Up",
+                                  showSignup ? "Sign Up" : "Log In",
                                   style: TextStyle(
-                                    color: Colors.blue,
+                                    color: Colors.white,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                            ],
+                            ),
                           ),
-                        ],
-                      ),
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              showSignup ? "Already have an account?" : "Don't have an account?",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  showSignup = !showSignup;
+                                });
+                              },
+                              child: Text(
+                                showSignup ? " Log In" : " Sign Up",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ],
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        );
+      },
+    ),
+  );
+}
 }
