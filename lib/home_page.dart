@@ -67,7 +67,29 @@ class _HomePageState extends State<HomePage>{
                       final item = judgments[index];
                       return ListTile(
                         title: Text(item.snippet ?? 'No snippet'),
-                        subtitle: Text('CaseNo: ${item.caseNo}'),
+                        subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start, // Align content to the start
+                            children: [
+                              Text('CaseNo: ${item.caseNo}'), // Case number at the top
+                              SizedBox(height: 8), // Add some spacing between the text and the button
+                              ElevatedButton(
+                                onPressed: () async {
+                                  try {
+                                    context.read<JudgmentBloc>().add(
+                                      JudgmentAddFavoriteEvent(JudgmentID: item.judgmentID.toString()),
+                                    );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Judgment added to favorites!')),
+                                  );
+                                  } catch (e) {
+                                    print('Error: $e');
+                                  }
+                                  
+                                },
+                                child: Text("Favorite"), // Button below the case number
+                              ),
+                            ],
+                          ),
                       );
                     },
                   );

@@ -20,21 +20,8 @@ class JudgmentViewEvent extends JudgmentEvent {
   JudgmentViewEvent({required this.id});
 }
 
+class JudgmentAddFavoriteEvent extends JudgmentEvent {
+  final String JudgmentID;
 
-class TransactionsAddEvent extends JudgmentEvent {
-  final String transaction;
-
-  TransactionsAddEvent({required this.transaction});
-}
-
-class TransactionsDeleteEvent extends JudgmentEvent {
-  final String transaction;
-
-  TransactionsDeleteEvent({required this.transaction});
-}
-
-class TransactionsErrorEvent extends JudgmentEvent {
-  final String error;
-
-  TransactionsErrorEvent({required this.error});
+  JudgmentAddFavoriteEvent({required this.JudgmentID});
 }

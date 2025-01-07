@@ -31,6 +31,21 @@ class JudgmentBloc extends Bloc<JudgmentEvent, JudgmentState> {
         emit(JudgmentError(error: e.toString()));
       }
     });
+
+    on<JudgmentAddFavoriteEvent>((event, emit) async {
+      try {
+        final result = await manager.addFavorite(
+          judgmentId: event.JudgmentID,
+        );
+        if (result['success'] == true) {
+          //Nothign
+        } else {
+          emit(JudgmentError(error: result['message']));
+        }
+      } catch (e) {
+        emit(JudgmentError(error: e.toString()));
+      }
+    });
   }
 }
 

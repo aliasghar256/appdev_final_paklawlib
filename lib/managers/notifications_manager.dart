@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/notifications_model.dart';
+import './header_util.dart';
+
 
 class NotificationsManager {
   // Base URL for the notifications API
@@ -10,9 +12,10 @@ class NotificationsManager {
 
   Future<List<NotificationsModel>> fetchAllNotifications() async {
     final url = Uri.parse(baseUrl);
+    final headers = await HeaderUtil.createAuthHeaders();
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as List<dynamic>;
