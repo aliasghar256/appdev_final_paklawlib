@@ -18,6 +18,13 @@ class ViewJudgmentPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('View Judgment'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            // Navigate back to the previous screen
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: BlocBuilder<JudgmentBloc, JudgmentState>(
         builder: (context, state) {

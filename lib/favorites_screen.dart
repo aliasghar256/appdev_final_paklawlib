@@ -4,6 +4,7 @@ import '../bloc/judgment_bloc/judgment_bloc.dart';
 import '../bloc/judgment_bloc/judgment_event.dart';
 import '../bloc/judgment_bloc/judgment_state.dart';
 import '../models/judgment_model.dart';
+import 'view_judgment_page.dart';
 
 class FavoritesScreen extends StatelessWidget {
   @override
@@ -40,6 +41,14 @@ class FavoritesScreen extends StatelessWidget {
                       SizedBox(height: 8),
                       Text('Case No: ${judgment.caseNo}'),
                       Text('Year: ${judgment.caseYear}'),
+                      ElevatedButton(onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ViewJudgmentPage(judgmentId: judgment.judgmentID.toString()),
+                              ),
+                            );
+                          }, child: Text("View Judgment"))
                     ],
                   ),
                   trailing: IconButton(

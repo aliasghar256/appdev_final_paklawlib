@@ -6,6 +6,7 @@ import './bloc/judgment_bloc/judgment_event.dart';
 import 'bloc/judgment_bloc/judgment_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'notifications_screen.dart';
+import 'view_judgment_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -133,6 +134,14 @@ class HomeContent extends StatelessWidget {
                             },
                             child: Text("Favorite"),
                           ),
+                          ElevatedButton(onPressed: (){
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => ViewJudgmentPage(judgmentId: item.judgmentID.toString()),
+                              ),
+                            );
+                          }, child: Text("View Judgment"))
                         ],
                       ),
                     );
