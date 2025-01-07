@@ -1,7 +1,12 @@
+import 'package:equatable/equatable.dart';
 import '../../models/judgment_model.dart';
 
+abstract class JudgmentState extends Equatable {
+  const JudgmentState();
 
-abstract class JudgmentState {}
+  @override
+  List<Object?> get props => [];
+}
 
 class JudgmentInitial extends JudgmentState {}
 
@@ -10,19 +15,28 @@ class JudgmentLoading extends JudgmentState {}
 class JudgmentsLoaded extends JudgmentState {
   final List<Judgment> judgments;
 
-  JudgmentsLoaded({required this.judgments});
+  const JudgmentsLoaded({required this.judgments});
+
+  @override
+  List<Object?> get props => [judgments];
 }
 
 class JudgmentViewLoaded extends JudgmentState {
   final Judgment judgment;
 
-  JudgmentViewLoaded({required this.judgment});
+  const JudgmentViewLoaded({required this.judgment});
+
+  @override
+  List<Object?> get props => [judgment];
 }
 
 class JudgmentError extends JudgmentState {
   final String error;
 
-  JudgmentError({required this.error});
+  const JudgmentError({required this.error});
+
+  @override
+  List<Object?> get props => [error];
 }
 
 class JudgmentFavoritesLoading extends JudgmentState {}
@@ -30,11 +44,17 @@ class JudgmentFavoritesLoading extends JudgmentState {}
 class JudgmentFavoritesLoaded extends JudgmentState {
   final List<Judgment> judgments;
 
-  JudgmentFavoritesLoaded({required this.judgments});
+  const JudgmentFavoritesLoaded({required this.judgments});
+
+  @override
+  List<Object?> get props => [judgments];
 }
 
 class JudgmentFavoritesError extends JudgmentState {
   final String error;
 
-  JudgmentFavoritesError({required this.error});
+  const JudgmentFavoritesError({required this.error});
+
+  @override
+  List<Object?> get props => [error];
 }

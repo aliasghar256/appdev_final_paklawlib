@@ -1,21 +1,31 @@
+import 'package:equatable/equatable.dart';
 import '../../models/templates_model.dart';
 
+abstract class TemplatesState extends Equatable {
+  const TemplatesState();
 
-abstract class TemplatesState {}
+  @override
+  List<Object?> get props => [];
+}
 
 class TemplatesLoading extends TemplatesState {}
 
 class TemplatesLoaded extends TemplatesState {
   final List<Template> templates;
 
-  TemplatesLoaded({required this.templates});
-}
+  const TemplatesLoaded({required this.templates});
 
+  @override
+  List<Object?> get props => [templates];
+}
 
 class TemplatesError extends TemplatesState {
   final String error;
 
-  TemplatesError({required this.error});
+  const TemplatesError({required this.error});
+
+  @override
+  List<Object?> get props => [error];
 }
 
 class TemplateDownloadInProgress extends TemplatesState {}
@@ -23,13 +33,17 @@ class TemplateDownloadInProgress extends TemplatesState {}
 class TemplateDownloaded extends TemplatesState {
   final String savePath;
 
-  TemplateDownloaded({required this.savePath});
+  const TemplateDownloaded({required this.savePath});
 
+  @override
+  List<Object?> get props => [savePath];
 }
 
 class TemplateDownloadError extends TemplatesState {
   final String error;
 
-  TemplateDownloadError({required this.error});
+  const TemplateDownloadError({required this.error});
 
+  @override
+  List<Object?> get props => [error];
 }

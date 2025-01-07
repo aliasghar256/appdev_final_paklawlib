@@ -1,12 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
-class NotificationsModel {
+class NotificationsModel extends Equatable {
   final String id;
   final String title;
   final String description;
   final DateTime date;
 
-  NotificationsModel({
+  const NotificationsModel({
     required this.id,
     required this.title,
     required this.description,
@@ -35,6 +36,9 @@ class NotificationsModel {
     final DateFormat formatter = DateFormat('yyyy-MM-dd');
     return formatter.format(date);
   }
+
+  @override
+  List<Object?> get props => [id, title, description, date];
 }
 
 List<NotificationsModel> parseNotifications(List<dynamic> jsonList) {

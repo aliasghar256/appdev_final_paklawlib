@@ -1,4 +1,6 @@
-class Judgment {
+import 'package:equatable/equatable.dart';
+
+class Judgment extends Equatable {
   final int judgmentID;
   final int caseYear;
   final String party1;
@@ -9,7 +11,7 @@ class Judgment {
   final List<int> indexes;
   final String JudgmentText;
 
-  Judgment({
+  const Judgment({
     required this.judgmentID,
     required this.caseYear,
     required this.party1,
@@ -25,14 +27,27 @@ class Judgment {
   factory Judgment.fromJson(Map<String, dynamic> json) {
     return Judgment(
       judgmentID: json['JudgmentID'] ?? 0,
-      caseYear: json['CaseYear'] ?? '',
+      caseYear: json['CaseYear'] ?? 0,
       party1: json['Party1'] ?? '',
       party2: json['Party2'] ?? '',
-      judgeID: json['JudgeID'] ?? '',
+      judgeID: json['JudgeID'] ?? 0,
       caseNo: json['CaseNo'] ?? '',
       snippet: json['snippet'] ?? '',
       indexes: List<int>.from(json['indexes'] ?? []),
       JudgmentText: json['JudgmentText'] ?? '',
     );
   }
+
+  @override
+  List<Object?> get props => [
+        judgmentID,
+        caseYear,
+        party1,
+        party2,
+        judgeID,
+        caseNo,
+        snippet,
+        indexes,
+        JudgmentText,
+      ];
 }

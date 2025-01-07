@@ -1,14 +1,15 @@
 import 'dart:convert';
+import 'package:equatable/equatable.dart';
 
-class Template {
-  String id;
-  String filename;
-  int length;
-  int chunkSize;
-  DateTime uploadDate;
-  Metadata metadata;
+class Template extends Equatable {
+  final String id;
+  final String filename;
+  final int length;
+  final int chunkSize;
+  final DateTime uploadDate;
+  final Metadata metadata;
 
-  Template({
+  const Template({
     required this.id,
     required this.filename,
     required this.length,
@@ -40,13 +41,16 @@ class Template {
       'metadata': metadata.toJson(),
     };
   }
+
+  @override
+  List<Object?> get props => [id, filename, length, chunkSize, uploadDate, metadata];
 }
 
-class Metadata {
-  String title;
-  String description;
+class Metadata extends Equatable {
+  final String title;
+  final String description;
 
-  Metadata({
+  const Metadata({
     required this.title,
     required this.description,
   });
@@ -66,14 +70,18 @@ class Metadata {
       'description': description,
     };
   }
+
+  @override
+  List<Object?> get props => [title, description];
 }
 
+// Helper function to parse a JSON string into a list of Template objects
 List<Template> templatesFromJson(String str) {
   final jsonData = json.decode(str) as List;
   return jsonData.map((item) => Template.fromJson(item as Map<String, dynamic>)).toList();
 }
 
-// Helper function to convert a list of Template objects to JSON string
+// Helper function to convert a list of Template objects to a JSON string
 String templatesToJson(List<Template> templates) {
   final jsonData = templates.map((template) => template.toJson()).toList();
   return json.encode(jsonData);

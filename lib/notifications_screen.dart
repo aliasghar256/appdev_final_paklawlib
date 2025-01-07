@@ -15,7 +15,7 @@ class NotificationsScreen extends StatelessWidget {
     // Wrap in a Scaffold with a teal AppBar
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFF016969),
+        backgroundColor: const Color(0xFF002652),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -23,7 +23,7 @@ class NotificationsScreen extends StatelessWidget {
           },
         ),
         title: const Text(
-          'Notification',
+          'Notifications',
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
