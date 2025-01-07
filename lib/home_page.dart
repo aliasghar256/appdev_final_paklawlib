@@ -27,6 +27,9 @@ class _HomePageState extends State<HomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (index == 0) {
+        context.read<JudgmentBloc>().add(ReturnToHomePageEvent());
+      }
     });
   }
 

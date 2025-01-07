@@ -33,3 +33,5 @@ class JudgmentDeleteFavoriteEvent extends JudgmentEvent {
 
   JudgmentDeleteFavoriteEvent({required this.JudgmentID});
 }
+
+class ReturnToHomePageEvent extends JudgmentEvent {}

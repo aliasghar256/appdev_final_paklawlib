@@ -21,6 +21,7 @@ class ViewJudgmentPage extends StatelessWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
+            context.read<JudgmentBloc>().add(ReturnToHomePageEvent());
             // Navigate back to the previous screen
             Navigator.pop(context);
           },

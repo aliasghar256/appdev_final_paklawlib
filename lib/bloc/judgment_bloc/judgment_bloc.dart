@@ -6,6 +6,8 @@ import '../../models/judgment_model.dart';
 
 class JudgmentBloc extends Bloc<JudgmentEvent, JudgmentState> {
   final JudgmentManager manager;
+  List<Judgment>? _cachedJudgments; // Cache for previously loaded judgments
+
 
   JudgmentBloc({required this.manager}) : super(JudgmentInitial()) {
     on<JudgmentKeywordSearchEvent>((event, emit) async {
@@ -16,6 +18,7 @@ class JudgmentBloc extends Bloc<JudgmentEvent, JudgmentState> {
           page: event.page,
           limit: event.limit,
         );
+        _cachedJudgments = judgments;
         emit(JudgmentsLoaded(judgments: judgments));
       } catch (e) {
         emit(JudgmentError(error: e.toString()));
@@ -72,6 +75,10 @@ class JudgmentBloc extends Bloc<JudgmentEvent, JudgmentState> {
     // Handle any errors during the API call
     emit(JudgmentError(error: e.toString()));
   }
+});
+
+on<ReturnToHomePageEvent>((event, emit) async {
+  emit(JudgmentsLoaded(judgments: _cachedJudgments ?? []));
 });
 
   }
