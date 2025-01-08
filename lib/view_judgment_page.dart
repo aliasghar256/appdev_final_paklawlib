@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share_plus/share_plus.dart';
 import 'bloc/judgment_bloc/judgment_bloc.dart';
 import 'bloc/judgment_bloc/judgment_state.dart';
 import 'bloc/judgment_bloc/judgment_event.dart';
@@ -9,7 +10,6 @@ class ViewJudgmentPage extends StatelessWidget {
   final String judgmentId;
 
   const ViewJudgmentPage({Key? key, required this.judgmentId}) : super(key: key);
-  
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class ViewJudgmentPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             // Trigger the event to load favorites when the screen is first built
-              context.read<JudgmentBloc>().add(ReturnToHomePageEvent());
-            
+            context.read<JudgmentBloc>().add(ReturnToHomePageEvent());
+
             Navigator.pushNamedAndRemoveUntil(context, '/home', (route) => false);
           },
         ),
@@ -74,6 +74,41 @@ class ViewJudgmentPage extends StatelessWidget {
                   Text(
                     'Indexes: ${judgment.indexes.isNotEmpty ? judgment.indexes.join(", ") : "No indexes"}',
                     style: const TextStyle(fontSize: 15),
+                  ),
+                  const SizedBox(height: 24),
+                  // Share to WhatsApp button
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      final String judgmentText = '''
+                          *Judgment Details*
+                          Case No: ${judgment.caseNo}
+                          Case Year: ${judgment.caseYear}
+                          Party 1: ${judgment.party1}
+                          Party 2: ${judgment.party2}
+                          Judge ID: ${judgment.judgeID}
+
+                          *Judgment Text:*
+                          ${judgment.JudgmentText}
+
+                          *Indexes:*
+                          ${judgment.indexes.isNotEmpty ? judgment.indexes.join(", ") : "No indexes available"}
+                          ''';
+
+                      Share.share(
+                        judgmentText,
+                        subject: 'Judgment Details',
+                      );
+                    },
+                    icon: const Icon(Icons.share),
+                    label: const Text('Share to WhatsApp'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF25D366), // WhatsApp green color
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
                   ),
                 ],
               ),

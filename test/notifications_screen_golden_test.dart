@@ -11,7 +11,7 @@ import '../lib/bloc/notifications_bloc/notifications_bloc.dart';
 import '../lib/bloc/notifications_bloc/notifications_event.dart';
 import '../lib/bloc/notifications_bloc/notifications_state.dart';
 import '../lib/models/notifications_model.dart';
-import '../lib/managers/notifications_manager.dart'; // Add your NotificationsManager here.
+import '../lib/managers/notifications_manager.dart';
 
 Future<void> testExecutable(FutureOr<void> Function() testMain) async {
   return GoldenToolkit.runWithConfiguration(
@@ -28,6 +28,52 @@ Future<void> testExecutable(FutureOr<void> Function() testMain) async {
 void main() {
   setUpAll(() async {
     await loadAppFonts(); // Ensure fonts are loaded.
+  });
+
+  testGoldens('NotificationsScreen Golden Test - Initial State', (WidgetTester tester) async {
+    final mockManager = MockNotificationsManager();
+    final mockBloc = MockNotificationsBloc(
+      initialState: NotificationsInitial(),
+      manager: mockManager,
+    );
+
+    final widget = BlocProvider<NotificationsBloc>(
+      create: (_) => mockBloc,
+      child: const MaterialApp(
+        home: NotificationsScreen(),
+      ),
+    );
+
+    await tester.pumpWidgetBuilder(
+      widget,
+      surfaceSize: const Size(400, 800),
+    );
+    await tester.pumpAndSettle();
+
+    await screenMatchesGolden(tester, 'notifications_screen_initial_state');
+  });
+
+  testGoldens('NotificationsScreen Golden Test - Loading State', (WidgetTester tester) async {
+    final mockManager = MockNotificationsManager();
+    final mockBloc = MockNotificationsBloc(
+      initialState: NotificationsLoading(),
+      manager: mockManager,
+    );
+
+    final widget = BlocProvider<NotificationsBloc>(
+      create: (_) => mockBloc,
+      child: const MaterialApp(
+        home: NotificationsScreen(),
+      ),
+    );
+
+    await tester.pumpWidgetBuilder(
+      widget,
+      surfaceSize: const Size(400, 800),
+    );
+    await tester.pumpAndSettle();
+
+    await screenMatchesGolden(tester, 'notifications_screen_loading_state');
   });
 
   testGoldens('NotificationsScreen Golden Test - Loaded State', (WidgetTester tester) async {

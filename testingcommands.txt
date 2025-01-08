@@ -7,3 +7,4 @@ flutter test test/bloc/templates_bloc/templates_bloc_test.dart
 
 flutter test --update-goldens test/notifications_screen_golden_test.dart
 flutter test test/notifications_screen_golden_test.dart
+flutter test --update-goldens test/home_page_golden_test.dart

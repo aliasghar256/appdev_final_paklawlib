@@ -91,12 +91,52 @@ class _HomePageState extends State<HomePage> {
 }
 
 // Placeholder for Home content
-class HomeContent extends StatelessWidget {
+class HomeContent extends StatefulWidget {
+  @override
+  _HomeContentState createState() => _HomeContentState();
+}
+
+class _HomeContentState extends State<HomeContent> {
+  String _selectedSortOption = 'Year'; // Default sorting option
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // Search Bar
         JudgmentSearchBar(),
+
+        // Sorting Dropdown
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Sort By:',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              DropdownButton<String>(
+                value: _selectedSortOption,
+                items: ['Year', 'Case No', 'Title'].map((option) {
+                  return DropdownMenuItem<String>(
+                    value: option,
+                    child: Text(option),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() {
+                      _selectedSortOption = value;
+                    });
+                  }
+                },
+              ),
+            ],
+          ),
+        ),
+
+        // Judgments List
         Expanded(
           child: BlocBuilder<JudgmentBloc, JudgmentState>(
             builder: (context, state) {
@@ -105,7 +145,23 @@ class HomeContent extends StatelessWidget {
               } else if (state is JudgmentLoading) {
                 return Center(child: CircularProgressIndicator());
               } else if (state is JudgmentsLoaded) {
-                final judgments = state.judgments;
+                var judgments = state.judgments;
+
+                // Apply sorting based on the selected option
+                judgments.sort((a, b) {
+                  switch (_selectedSortOption) {
+                    case 'Year':
+                      return b.caseYear.compareTo(a.caseYear); // Descending order
+                    case 'Case No':
+                      return a.caseNo.compareTo(b.caseNo); // Ascending order
+                    case 'Title':
+                      return a.party1
+                          .toLowerCase()
+                          .compareTo(b.party1.toLowerCase()); // Alphabetical
+                    default:
+                      return 0;
+                  }
+                });
 
                 return ListView.builder(
                   itemCount: judgments.length,
@@ -123,7 +179,6 @@ class HomeContent extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Judgment Title
                             Text(
                               '${item.party1} vs ${item.party2}',
                               style: TextStyle(
@@ -136,15 +191,13 @@ class HomeContent extends StatelessWidget {
                             Text(
                               item.snippet ?? 'No snippet available',
                               style: TextStyle(
-                                fontSize: 16, // Smaller font size
+                                fontSize: 16,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.black,
                               ),
-                              maxLines: 4, // Limit to 2 lines
-                              overflow: TextOverflow.ellipsis, // Add ellipses (...) for overflow
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            // Case Details (Party1 vs Party2, CaseNo, and Year)
-                            
                             SizedBox(height: 4),
                             Text(
                               'Case No: ${item.caseNo}',
@@ -155,34 +208,26 @@ class HomeContent extends StatelessWidget {
                               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                             ),
                             SizedBox(height: 12),
-
-                            // Action Buttons (Favorite and View Judgment)
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 ElevatedButton.icon(
-                                  onPressed: () async {
-                                    try {
-                                      context.read<JudgmentBloc>().add(
-                                            JudgmentAddFavoriteEvent(
-                                              JudgmentID: item.judgmentID.toString(),
-                                            ),
-                                          );
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                          content: Text('Judgment added to favorites!'),
-                                          behavior: SnackBarBehavior.floating,
-                                        ),
-                                      );
-                                    } catch (e) {
-                                      print('Error: $e');
-                                    }
+                                  onPressed: () {
+                                    context.read<JudgmentBloc>().add(
+                                          JudgmentAddFavoriteEvent(
+                                            JudgmentID: item.judgmentID.toString(),
+                                          ),
+                                        );
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Judgment added to favorites!'),
+                                      ),
+                                    );
                                   },
                                   icon: Icon(Icons.favorite),
                                   label: Text("Favorite"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.red[400],
-                                    foregroundColor: Colors.white,
                                   ),
                                 ),
                                 ElevatedButton.icon(
@@ -190,8 +235,8 @@ class HomeContent extends StatelessWidget {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => ViewJudgmentPage(judgmentId: item.judgmentID.toString()),
-                                        settings: RouteSettings(arguments: 'home'), // Passing 'home' as the previous page
+                                        builder: (context) =>
+                                            ViewJudgmentPage(judgmentId: item.judgmentID.toString()),
                                       ),
                                     );
                                   },
@@ -199,7 +244,6 @@ class HomeContent extends StatelessWidget {
                                   label: Text("View Judgment"),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Color(0xFF002855),
-                                    foregroundColor: Colors.white,
                                   ),
                                 ),
                               ],
@@ -208,13 +252,12 @@ class HomeContent extends StatelessWidget {
                         ),
                       ),
                     );
-
                   },
                 );
               } else if (state is JudgmentError) {
                 return Center(child: Text('Error: ${state.error}'));
               } else {
-                return Center(child: Text('Something else happened.'));
+                return Center(child: Text('Something went wrong.'));
               }
             },
           ),
@@ -223,6 +266,7 @@ class HomeContent extends StatelessWidget {
     );
   }
 }
+
 
 
 class JudgmentSearchBar extends StatefulWidget {

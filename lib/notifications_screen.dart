@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 // Import your bloc files
 import './bloc/notifications_bloc/notifications_bloc.dart';
-import './bloc/notifications_bloc/notifications_state.dart'; 
+import './bloc/notifications_bloc/notifications_state.dart';
 import './bloc/notifications_bloc/notifications_event.dart';
 import './models/notifications_model.dart';
 
@@ -12,14 +12,13 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap in a Scaffold with a teal AppBar
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF002652),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // go back
+            Navigator.pop(context); // Go back
           },
         ),
         title: const Text(
@@ -41,13 +40,28 @@ class NotificationsScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFF5F5F5),
       body: BlocBuilder<NotificationsBloc, NotificationsState>(
         builder: (context, state) {
-          if (state is NotificationsLoading) {
+          if (state is NotificationsInitial) {
+            // Display an initial message
+            return const Center(
+              child: Text(
+                'Please load your notifications.',
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+            );
+          } else if (state is NotificationsLoading) {
+            // Show a loading spinner
             return const Center(child: CircularProgressIndicator());
           } else if (state is NotificationsLoaded) {
-            final notifications = state.notifications; // List<NotificationsModel>
-            
+            // Display the list of notifications
+            final notifications = state.notifications;
+
             if (notifications.isEmpty) {
-              return const Center(child: Text('No notifications found.'));
+              return const Center(
+                child: Text(
+                  'No notifications found.',
+                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                ),
+              );
             }
 
             return ListView.builder(
@@ -59,12 +73,29 @@ class NotificationsScreen extends StatelessWidget {
               },
             );
           } else if (state is NotificationsError) {
+            // Display the error message
             return Center(
-              child: Text('Error: ${state.error}'),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, color: Colors.red, size: 60),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error: ${state.error}',
+                    style: const TextStyle(fontSize: 16, color: Colors.black54),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
             );
           } else {
-            // If we encounter an unexpected state
-            return const Center(child: Text('Unexpected state.'));
+            // Unexpected state
+            return const Center(
+              child: Text(
+                'An unexpected error occurred.',
+                style: TextStyle(fontSize: 16, color: Colors.black54),
+              ),
+            );
           }
         },
       ),
@@ -72,21 +103,7 @@ class NotificationsScreen extends StatelessWidget {
   }
 
   /// Builds a single notification row item
-  Widget _buildNotificationItem(notification) {
-    // You can cast to your NotificationsModel if needed:
-    // final noti = notification as NotificationsModel;
-
-    // -------------------------------------------------------------------------
-    // COMMENTED OUT all unreadCount logic:
-    // final unreadCount = notification.unreadCount ?? 0;
-    //
-    // COMMENTED OUT all imageUrl logic:
-    // CircleAvatar(
-    //   radius: 30,
-    //   backgroundImage: NetworkImage(notification.imageUrl),
-    // ),
-    // -------------------------------------------------------------------------
-
+  Widget _buildNotificationItem(NotificationsModel notification) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -97,42 +114,7 @@ class NotificationsScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(width: 10),
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              // CircleAvatar(
-              //   radius: 30,
-              //   backgroundImage: NetworkImage(notification.imageUrl),
-              // ),
-              // if (unreadCount > 0)
-              //   Positioned(
-              //     top: -4,
-              //     left: -4,
-              //     child: Container(
-              //       width: 24,
-              //       height: 24,
-              //       decoration: BoxDecoration(
-              //         color: const Color(0xFFFF5722), // orange
-              //         shape: BoxShape.circle,
-              //         border: Border.all(color: Colors.white, width: 1),
-              //       ),
-              //       alignment: Alignment.center,
-              //       child: Text(
-              //         '$unreadCount',
-              //         style: const TextStyle(
-              //           color: Colors.white,
-              //           fontSize: 12,
-              //           fontWeight: FontWeight.bold,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-            ],
-          ),
           const SizedBox(width: 12),
-
-          // Title, description, and time
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
